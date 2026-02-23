@@ -1,0 +1,10 @@
+# Allow all search engines to crawl the site
+User-agent: *
+Allow: /
+
+# Specifically point to your sitemap to help bots find it
+Sitemap: https://jasontbarnes.com/sitemap.xml
+
+# Disallow crawling of any potential temporary or system files
+Disallow: /README.md
+Disallow: /DEPLOY.md
