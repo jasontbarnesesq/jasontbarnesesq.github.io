@@ -1365,6 +1365,22 @@
     </div>
   </div>
 
+In reviewing the hero-right visual code against your current site structure and the recent move to the Google Cloud Run subdomain, there are a few technical and structural errors to address.
+1. Inconsistent URL Label
+
+In the device-url span, the text is currently "MyLegalTimekeeper". For a more "institutional-quality" feel and to match your new subdomain mapping, this should be updated to reflect your professional URL.
+
+    Correction: Change MyLegalTimekeeper to timekeeper.jasontbarnes.com.
+
+2. Typographic and Logical Consistency
+
+The date in the visual is hardcoded as Feb 10, 2026. Since your footer and sitemap refer to Feb 23, 2026, updating this creates a more current feel for the user. Additionally, the time entries total 8.5h, but the individual entries listed (2.6 + 1.9 + 3.2 + 0.8) equal 8.5h. While the math is correct, ensure that the app-timer-fill width in your CSS matches the "completeness" of a standard workday (e.g., if 8.5h is the goal, the bar should be near 100%).
+3. Missing Parent Accessibility
+
+If this visual is meant to be interactive or provide a "live" feel, ensure it is wrapped in an aria-hidden="true" attribute if it is purely decorative, or provide a description for screen readers, as the nested <div> structure for time entries is difficult for assistive technology to parse.
+The Corrected Code
+HTML
+
   <div class="hero-right">
     <div class="hero-visual">
       <div class="device-frame">
