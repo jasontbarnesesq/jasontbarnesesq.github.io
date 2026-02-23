@@ -4,36 +4,64 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Legal Services | Jason T. Barnes</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root { --cream: #F5EFE4; --ochre: #C17D2E; --bark: #3D2B1A; --rust: #A64E2A; }
-  body { background: var(--cream); color: var(--bark); font-family: 'DM Sans', sans-serif; margin: 0; padding: 40px; }
-  h1 { font-family: 'Playfair Display', serif; font-size: 3rem; border-bottom: 2px solid var(--ochre); padding-bottom: 10px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 40px; }
-  .card { background: white; padding: 30px; border-left: 5px solid var(--rust); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-  .card h2 { font-family: 'Playfair Display', serif; color: var(--rust); margin-top: 0; }
-  .back-link { margin-top: 50px; display: block; color: var(--ochre); text-decoration: none; font-weight: bold; }
+  :root {
+    --cream: #F5EFE4;
+    --ochre: #C17D2E;
+    --bark: #3D2B1A;
+    --rust: #A64E2A;
+    --parchment: #FAF7F2;
+  }
+  body { background: var(--cream); color: var(--bark); font-family: 'DM Sans', sans-serif; margin: 0; line-height: 1.6; }
+  .container { max-width: 900px; margin: 0 auto; padding: 80px 20px; }
+  
+  h1 { font-family: 'Playfair Display', serif; font-size: 3.5rem; margin-bottom: 1rem; color: var(--bark); }
+  .subtitle { font-size: 1.2rem; color: var(--ochre); font-weight: 500; margin-bottom: 3rem; text-transform: uppercase; letter-spacing: 0.1em; }
+  
+  section { background: var(--parchment); padding: 40px; margin-bottom: 30px; border-left: 4px solid var(--ochre); box-shadow: 0 4px 15px rgba(0,0,0,0.03); scroll-margin-top: 40px; }
+  h2 { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--rust); margin-top: 0; }
+  
+  .back-home { display: inline-block; margin-top: 40px; color: var(--bark); text-decoration: none; font-weight: 500; border-bottom: 1px solid var(--ochre); transition: 0.3s; }
+  .back-home:hover { color: var(--ochre); }
+
+  @media (max-width: 600px) { h1 { font-size: 2.5rem; } }
 </style>
 </head>
 <body>
-  <h1>Legal Services</h1>
-  <p>Providing strategic counsel at the intersection of complex securities law and emerging technology.</p>
-  
-  <div class="grid">
-    <div class="card">
-      <h2>M&A / Private Equity</h2>
-      <p>Focused on middle-market transactions, structuring complex TopCo/MidCo/BidCo acquisitions and tax-efficient reorganizations.</p>
-    </div>
-    <div class="card">
-      <h2>Venture Capital</h2>
-      <p>Representing both funds and founders through the lifecycle of growth, from seed rounds to exit strategies.</p>
-    </div>
-    <div class="card">
-      <h2>Securities Compliance</h2>
-      <p>Deep expertise in SEC reporting, private fund transparency, and mitigating investor claim risks.</p>
-    </div>
-  </div>
 
-  <a href="/" class="back-link">← Return Home</a>
+<div class="container">
+  <a href="/" class="back-home">← Back to Homepage</a>
+  <h1>Legal Services</h1>
+  <p class="subtitle">Securities Counsel & Corporate Finance</p>
+
+  <section id="alternative-investments">
+    <h2>Alternative Investments</h2>
+    <p>Strategic guidance for sponsors and institutional investors in the alternative asset space, focusing on regulatory compliance and structural efficiency.</p>
+  </section>
+
+  <section id="family-office">
+    <h2>Family Office Structuring</h2>
+    <p>Designing robust governance frameworks and investment vehicles tailored to the unique multi-generational needs of family offices.</p>
+  </section>
+
+  <section id="eb5">
+    <h2>EB-5 Program</h2>
+    <p>National authority on EB-5 financing, having advised on billions in capital raises across 51 countries with a focus on regional center compliance.</p>
+  </section>
+
+  <section id="fund-formation">
+    <h2>Fund Formation</h2>
+    <p>Comprehensive counsel for private equity and venture capital fund sponsors, from initial term sheet drafting to final closing and GP/LP dynamics.</p>
+  </section>
+
+  <section id="ma">
+    <h2>M&A & Structured Finance</h2>
+    <p>Execution of middle-market transactions involving complex TopCo/MidCo/BidCo structures and cross-border regulatory hurdles.</p>
+  </section>
+
+  <a href="/" class="back-home">← Return Home</a>
+</div>
+
 </body>
 </html>
