@@ -1305,6 +1305,30 @@
     .about-left { display: none; }
     .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
   }
+
+/* ... existing CSS ... */
+
+  /* ─── INACTIVE LINK STATES ─── */
+  /* This section handles the 'graying out' of your pending pages */
+  .link-inactive {
+    color: #a0a0a0 !important;
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.4;
+    text-decoration: none;
+  }
+  
+  .coming-soon-badge {
+    font-size: 0.6rem;
+    background: #E8E1D5; /* Matches your parchment-dark token */
+    color: #5D4D3D;      /* Matches your bark-light token */
+    padding: 1px 4px;
+    border-radius: 2px;
+    margin-left: 5px;
+    vertical-align: middle;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
 </style>
 </head>
 <body>
