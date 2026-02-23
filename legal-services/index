@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Legal Services | Jason T. Barnes</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root { --cream: #F5EFE4; --ochre: #C17D2E; --bark: #3D2B1A; --rust: #A64E2A; }
+  body { background: var(--cream); color: var(--bark); font-family: 'DM Sans', sans-serif; margin: 0; padding: 40px; }
+  h1 { font-family: 'Playfair Display', serif; font-size: 3rem; border-bottom: 2px solid var(--ochre); padding-bottom: 10px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 40px; }
+  .card { background: white; padding: 30px; border-left: 5px solid var(--rust); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+  .card h2 { font-family: 'Playfair Display', serif; color: var(--rust); margin-top: 0; }
+  .back-link { margin-top: 50px; display: block; color: var(--ochre); text-decoration: none; font-weight: bold; }
+</style>
+</head>
+<body>
+  <h1>Legal Services</h1>
+  <p>Providing strategic counsel at the intersection of complex securities law and emerging technology.</p>
+  
+  <div class="grid">
+    <div class="card">
+      <h2>M&A / Private Equity</h2>
+      <p>Focused on middle-market transactions, structuring complex TopCo/MidCo/BidCo acquisitions and tax-efficient reorganizations.</p>
+    </div>
+    <div class="card">
+      <h2>Venture Capital</h2>
+      <p>Representing both funds and founders through the lifecycle of growth, from seed rounds to exit strategies.</p>
+    </div>
+    <div class="card">
+      <h2>Securities Compliance</h2>
+      <p>Deep expertise in SEC reporting, private fund transparency, and mitigating investor claim risks.</p>
+    </div>
+  </div>
+
+  <a href="/" class="back-link">← Return Home</a>
+</body>
+</html>
