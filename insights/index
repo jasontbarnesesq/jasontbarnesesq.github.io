@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Insights | Jason T. Barnes</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root { --cream: #F5EFE4; --bark: #3D2B1A; --ochre: #C17D2E; }
+  body { background: var(--bark); color: var(--cream); font-family: 'DM Sans', sans-serif; text-align: center; padding: 100px 20px; }
+  h1 { font-family: 'Playfair Display', serif; font-size: 3.5rem; color: var(--ochre); }
+  p { font-size: 1.2rem; opacity: 0.8; max-width: 600px; margin: 0 auto; }
+  .notice { margin-top: 40px; font-style: italic; border: 1px solid var(--ochre); padding: 20px; display: inline-block; }
+</style>
+</head>
+<body>
+  <h1>Insights & Analysis</h1>
+  <p>A forthcoming archive of articles covering private equity trends, legal tech optimization, and securities law updates.</p>
+  <div class="notice">The Archive is currently being indexed. Please check back soon.</div>
+  <br><br>
+  <a href="/" style="color: var(--cream); text-decoration: underline;">Return to jasontbarnes.com</a>
+</body>
+</html>
