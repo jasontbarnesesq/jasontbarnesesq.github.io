@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=338, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Personal Dashboard · iOS26 Widget</title>
+<!--
+  ╔══════════════════════════════════════════════════════════╗
+  ║  iOS 26 Medium Widget  ·  338 × 158 pt                  ║
+  ║  Compatible with App Widgy (HTML Widget)                 ║
+  ║                                                          ║
+  ║  Features:                                               ║
+  ║  1. Today's mini events list (up to 3)                   ║
+  ║  2. Current day & date                                   ║
+  ║  3. Current weather  (Open-Meteo, free, no key)         ║
+  ║  4. Current moon phase (Jean Meeus algorithm)            ║
+  ║  5. Total daily step count                               ║
+  ║  6. Unlock trigger button                                ║
+  ║  7. One-tap shortcut to open Claude                      ║
+  ║                                                          ║
+  ║  Data injection via URL parameters (Widgy / Shortcuts):  ║
+  ║    ?lat=32.7&lon=-96.7   override GPS coords             ║
+  ║    ?temp=72&wdesc=Sunny&wicon=☀️&loc=Dallas              ║
+  ║    ?steps=8432                                           ║
+  ║    ?events=[{"title":"Standup","start":"2026-02-25T09:00"},...] ║
+  ╚══════════════════════════════════════════════════════════╝
+-->
+<style>
+/* ── Reset ─────────────────────────────────────────────── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+/* ── Design tokens ──────────────────────────────────────── */
+:root {
+  --accent:  #0A84FF;
+  --green:   #30D158;
+  --amber:   #FF9F0A;
+  --purple:  #BF5AF2;
+  --w1: rgba(255,255,255,0.96);
+  --w2: rgba(255,255,255,0.58);
+  --w3: rgba(255,255,255,0.28);
+  --w4: rgba(255,255,255,0.07);
+  --sep: rgba(255,255,255,0.09);
+  --r: 22px;
+}
+
+/* ── Page wrapper (preview centering on web) ────────────── */
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1a1a2e;
+  font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Widget shell ───────────────────────────────────────── */
+.widget {
+  position: relative;
+  width: 338px;
+  height: 158px;
+  background: rgba(11,11,20,0.91);
+  backdrop-filter: blur(28px) saturate(165%);
+  -webkit-backdrop-filter: blur(28px) saturate(165%);
+  border-radius: var(--r);
+  border: 1px solid rgba(255,255,255,0.08);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 88px 1fr;
+  grid-template-rows: 1fr 36px;
+  /* Subtle specular highlight along top edge */
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.10) inset,
+    0 12px 48px rgba(0,0,0,0.55),
+    0 2px 8px  rgba(0,0,0,0.35);
+}
+
+/* Blue glow in upper-left */
+.widget::before {
+  content: '';
+  position: absolute;
+  top: -60px; left: -40px;
+  width: 220px; height: 200px;
+  background: radial-gradient(circle, rgba(10,132,255,0.18) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Purple accent in lower-right */
+.widget::after {
+  content: '';
+  position: absolute;
+  bottom: -50px; right: -30px;
+  width: 180px; height: 160px;
+  background: radial-gradient(circle, rgba(191,90,242,0.10) 0%, transparent 68%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── LEFT PANEL: Date ───────────────────────────────────── */
+.col-date {
+  grid-column: 1;
+  grid-row: 1;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 13px 9px 10px 13px;
+  border-right: 1px solid var(--sep);
+}
+
+.date-weekday {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.date-day {
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: -3px;
+  line-height: 0.95;
+  color: var(--w1);
+  margin-top: 2px;
+}
+
+.date-month {
+  font-size: 9px;
+  font-weight: 500;
+  color: var(--w2);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-top: 3px;
+}
+
+.date-clock {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--w2);
+  letter-spacing: 0.02em;
+  margin-top: 5px;
+}
+
+/* ── RIGHT PANEL: Info + Events ─────────────────────────── */
+.col-main {
+  grid-column: 2;
+  grid-row: 1;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 12px 8px 10px;
+  gap: 6px;
+  overflow: hidden;
+}
+
+/* Weather + Moon row */
+.row-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.weather {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.weather-icon { font-size: 16px; line-height: 1; }
+
+.weather-temp {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--w1);
+  letter-spacing: -0.3px;
+  line-height: 1;
+}
+
+.weather-sub {
+  font-size: 8.5px;
+  color: var(--w2);
+  line-height: 1;
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 110px;
+}
+
+.moon {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.moon-icon { font-size: 14px; line-height: 1; }
+
+.moon-label {
+  font-size: 8.5px;
+  color: var(--w2);
+  white-space: nowrap;
+}
+
+/* Events */
+.events-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.events-label {
+  font-size: 7.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 3px;
+  opacity: 0.85;
+}
+
+.event-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 17px;
+  overflow: hidden;
+}
+
+.event-pip {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--accent);
+}
+.event-pip.p1 { background: var(--accent); }
+.event-pip.p2 { background: var(--green);  }
+.event-pip.p3 { background: var(--amber);  }
+
+.event-time {
+  font-size: 9px;
+  font-weight: 500;
+  color: var(--w3);
+  min-width: 40px;
+  flex-shrink: 0;
+}
+
+.event-title {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--w1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.events-empty {
+  font-size: 10px;
+  color: var(--w3);
+  font-style: italic;
+  line-height: 17px;
+}
+
+/* ── BOTTOM BAR ─────────────────────────────────────────── */
+.bar-bottom {
+  grid-column: 1 / 3;
+  grid-row: 2;
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--sep);
+  display: flex;
+  align-items: center;
+  padding: 0 10px 0 13px;
+  gap: 6px;
+}
+
+/* Steps */
+.steps-group {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  flex: 1;
+}
+
+.steps-icon { font-size: 12px; }
+
+.steps-val {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--green);
+  letter-spacing: -0.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.steps-unit {
+  font-size: 8.5px;
+  color: var(--w2);
+}
+
+/* Shared button styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 9px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.12s, transform 0.08s;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.btn:active {
+  opacity: 0.65;
+  transform: scale(0.95);
+}
+
+.btn-icon { font-size: 11px; line-height: 1; }
+
+.btn-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--w1);
+  white-space: nowrap;
+}
+
+.btn-unlock {
+  background: rgba(255,159,10,0.14);
+  border-color: rgba(255,159,10,0.26);
+}
+
+.btn-claude {
+  background: rgba(10,132,255,0.14);
+  border-color: rgba(10,132,255,0.26);
+}
+
+/* Subtle pulse on step count (living indicator) */
+@keyframes step-pulse {
+  0%,100% { opacity: 1; }
+  50%      { opacity: 0.70; }
+}
+.steps-val.pulse { animation: step-pulse 2.8s ease-in-out infinite; }
+
+</style>
+</head>
+<body>
+
+<div class="widget" role="region" aria-label="Personal Dashboard Widget">
+
+  <!-- ── LEFT: Date ── -->
+  <div class="col-date">
+    <div class="date-weekday" id="el-weekday">WED</div>
+    <div class="date-day"     id="el-day">25</div>
+    <div class="date-month"   id="el-month">Feb · 2026</div>
+    <div class="date-clock"   id="el-clock">9:41 AM</div>
+  </div>
+
+  <!-- ── RIGHT: Weather / Moon / Events ── -->
+  <div class="col-main">
+
+    <!-- Weather + Moon -->
+    <div class="row-info">
+      <div class="weather">
+        <span class="weather-icon" id="el-w-icon">⛅</span>
+        <div>
+          <div class="weather-temp" id="el-w-temp">72°F</div>
+          <div class="weather-sub"  id="el-w-sub">Partly Cloudy · Dallas</div>
+        </div>
+      </div>
+      <div class="moon">
+        <span class="moon-icon"  id="el-moon-icon">🌓</span>
+        <span class="moon-label" id="el-moon-label">First Quarter</span>
+      </div>
+    </div>
+
+    <!-- Events -->
+    <div class="events-section">
+      <div class="events-label">Today</div>
+      <div id="el-events"><!-- populated by JS --></div>
+    </div>
+
+  </div><!-- /col-main -->
+
+  <!-- ── BOTTOM BAR: Steps · Unlock · Claude ── -->
+  <div class="bar-bottom">
+
+    <div class="steps-group">
+      <span class="steps-icon">🦶</span>
+      <span class="steps-val pulse" id="el-steps">—</span>
+      <span class="steps-unit">steps today</span>
+    </div>
+
+    <!-- Unlock trigger -->
+    <a id="btn-unlock" class="btn btn-unlock" href="#" onclick="handleUnlock(event)">
+      <span class="btn-icon">🔓</span>
+      <span class="btn-label">Unlock</span>
+    </a>
+
+    <!-- Open Claude -->
+    <a id="btn-claude" class="btn btn-claude" href="claude://" onclick="handleClaude(event)">
+      <span class="btn-icon">✦</span>
+      <span class="btn-label">Claude</span>
+    </a>
+
+  </div><!-- /bar-bottom -->
+
+</div><!-- /widget -->
+
+<script>
+'use strict';
+
+/* ================================================================
+   HELPERS
+================================================================ */
+const $ = id => document.getElementById(id);
+
+const DAYS   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun',
+                'Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function fmt12h(h, m) {
+  const ap = h < 12 ? 'AM' : 'PM';
+  const hh = h % 12 || 12;
+  return hh + ':' + String(m).padStart(2,'0') + ' ' + ap;
+}
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g,
+    c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+const params = new URLSearchParams(location.search);
+
+/* ================================================================
+   1 + 2 · DATE & TIME
+================================================================ */
+function refreshDateTime() {
+  const now = new Date();
+  $('el-weekday').textContent = DAYS[now.getDay()].toUpperCase();
+  $('el-day').textContent     = now.getDate();
+  $('el-month').textContent   = MONTHS[now.getMonth()] + ' · ' + now.getFullYear();
+  $('el-clock').textContent   = fmt12h(now.getHours(), now.getMinutes());
+}
+
+/* ================================================================
+   4 · MOON PHASE  (Jean Meeus, "Astronomical Algorithms")
+================================================================ */
+const PHASES = [
+  { cap:0.025, e:'🌑', l:'New Moon'       },
+  { cap:0.225, e:'🌒', l:'Wax. Crescent'  },
+  { cap:0.275, e:'🌓', l:'First Quarter'  },
+  { cap:0.475, e:'🌔', l:'Wax. Gibbous'   },
+  { cap:0.525, e:'🌕', l:'Full Moon'       },
+  { cap:0.725, e:'🌖', l:'Wan. Gibbous'   },
+  { cap:0.775, e:'🌗', l:'Last Quarter'   },
+  { cap:0.975, e:'🌘', l:'Wan. Crescent'  },
+  { cap:1.001, e:'🌑', l:'New Moon'       },
+];
+
+function calcMoonPhase(date) {
+  let Y = date.getFullYear(), M = date.getMonth() + 1, D = date.getDate();
+  if (M <= 2) { Y--; M += 12; }
+  const A  = Math.floor(Y / 100);
+  const B  = 2 - A + Math.floor(A / 4);
+  const JD = Math.floor(365.25 * (Y + 4716))
+           + Math.floor(30.6001 * (M + 1))
+           + D + B - 1524.5;
+  // Days since known new moon: Jan 6.5 2000 UTC (JD 2451549.5)
+  const phase = (((JD - 2451549.5) / 29.53058867) % 1 + 1) % 1;
+  return PHASES.find(p => phase < p.cap) || PHASES[0];
+}
+
+function refreshMoon() {
+  const p = calcMoonPhase(new Date());
+  $('el-moon-icon').textContent  = p.e;
+  $('el-moon-label').textContent = p.l;
+}
+
+/* ================================================================
+   3 · WEATHER  — Open-Meteo API (free, no key required)
+   Override:  ?temp=72&wdesc=Sunny&wicon=☀️&loc=Dallas
+   GPS:       ?lat=32.77&lon=-96.79
+================================================================ */
+const WMO = {
+   0:['☀️','Clear'],       1:['🌤','Mostly Clear'],  2:['⛅','Partly Cloudy'],
+   3:['☁️','Overcast'],   45:['🌫','Foggy'],         48:['🌫','Icy Fog'],
+  51:['🌦','Drizzle'],    53:['🌦','Drizzle'],       55:['🌧','Heavy Drizzle'],
+  61:['🌧','Light Rain'], 63:['🌧','Rain'],           65:['🌧','Heavy Rain'],
+  71:['🌨','Light Snow'], 73:['❄️','Snow'],           75:['❄️','Heavy Snow'],
+  77:['🌨','Snow Grains'],80:['🌦','Showers'],        81:['🌧','Heavy Showers'],
+  82:['⛈','Violent Showers'],95:['⛈','Thunderstorm'],96:['⛈','Hail'],99:['⛈','Hail'],
+};
+
+function wmoInfo(code) {
+  if (WMO[code]) return WMO[code];
+  const k = Object.keys(WMO).map(Number).sort((a,b) => b-a).find(k => k <= code);
+  return WMO[k] || ['🌡','Unknown'];
+}
+
+function fetchWeather() {
+  // Manual URL-param override (useful when called from Widgy / Shortcuts)
+  if (params.get('temp')) {
+    $('el-w-temp').textContent = params.get('temp') + '°F';
+    const desc = params.get('wdesc') || '';
+    const loc  = params.get('loc')   || '';
+    $('el-w-sub').textContent  = [desc, loc].filter(Boolean).join(' · ');
+    if (params.get('wicon')) $('el-w-icon').textContent = params.get('wicon');
+    return;
+  }
+  // Default coords: Dallas, TX  —  swap via ?lat=…&lon=…
+  const lat = params.get('lat') || '32.7767';
+  const lon = params.get('lon') || '-96.7970';
+  const url = `https://api.open-meteo.com/v1/forecast`
+            + `?latitude=${lat}&longitude=${lon}`
+            + `&current=temperature_2m,weather_code`
+            + `&temperature_unit=fahrenheit&timezone=auto`;
+
+  fetch(url)
+    .then(r => r.json())
+    .then(d => {
+      const temp = Math.round(d.current.temperature_2m);
+      const [emoji, desc] = wmoInfo(d.current.weather_code);
+      $('el-w-icon').textContent = emoji;
+      $('el-w-temp').textContent = temp + '°F';
+      $('el-w-sub').textContent  = desc;
+    })
+    .catch(() => { /* keep placeholder values */ });
+}
+
+/* ================================================================
+   5 · STEP COUNT
+   Inject via URL: ?steps=8432
+   Widgy bridge:   uncomment WidgyBridge block below
+================================================================ */
+function loadSteps() {
+  const raw = params.get('steps');
+  if (raw) {
+    setSteps(parseInt(raw, 10));
+    return;
+  }
+
+  /* ── Widgy health bridge ──────────────────────────────────
+  if (typeof WidgyBridge !== 'undefined' && WidgyBridge.health) {
+    WidgyBridge.health.getStepCount(function(n) { setSteps(n); });
+    return;
+  }
+  ────────────────────────────────────────────────────────── */
+
+  // Demo fallback
+  setSteps(8432);
+}
+
+function setSteps(n) {
+  $('el-steps').textContent = Number(n).toLocaleString();
+}
+
+/* ================================================================
+   1 · CALENDAR EVENTS  (today)
+   Inject via URL: ?events=[{"title":"Standup","start":"2026-02-25T09:00"},...]
+   Widgy bridge:   uncomment WidgyBridge block below
+================================================================ */
+const PIP_CLASS = ['p1','p2','p3'];
+
+function renderEvents(list) {
+  const el = $('el-events');
+  if (!list || list.length === 0) {
+    el.innerHTML = '<div class="events-empty">No events today</div>';
+    return;
+  }
+  el.innerHTML = list.slice(0, 3).map((ev, i) => {
+    const ts = ev.start || ev.time || '';
+    const d  = ts ? new Date(ts) : null;
+    const t  = (d && !isNaN(d))
+               ? fmt12h(d.getHours(), d.getMinutes())
+               : (String(ts) || 'All Day');
+    return `<div class="event-row">
+      <span class="event-pip ${PIP_CLASS[i]}"></span>
+      <span class="event-time">${esc(t)}</span>
+      <span class="event-title">${esc(ev.title || 'Untitled')}</span>
+    </div>`;
+  }).join('');
+}
+
+function loadEvents() {
+  const raw = params.get('events');
+  if (raw) {
+    try { renderEvents(JSON.parse(decodeURIComponent(raw))); return; }
+    catch(e) { /* fall through */ }
+  }
+
+  /* ── Widgy calendar bridge ───────────────────────────────
+  if (typeof WidgyBridge !== 'undefined' && WidgyBridge.calendar) {
+    WidgyBridge.calendar.getTodayEvents(function(events) {
+      renderEvents(events);
+    });
+    return;
+  }
+  ────────────────────────────────────────────────────────── */
+
+  // Demo events (replace or remove in production)
+  const today = new Date();
+  const d = (h, m) => new Date(today.getFullYear(), today.getMonth(),
+                                today.getDate(), h, m).toISOString();
+  renderEvents([
+    { title: 'Team Standup',       start: d( 9,  0) },
+    { title: 'Client Call · Smith',start: d(14,  0) },
+    { title: 'Filing Deadline',    start: d(16, 30) },
+  ]);
+}
+
+/* ================================================================
+   6 · UNLOCK TRIGGER
+   Attempts (in order):
+     1. Widgy native lock command
+     2. Apple Shortcuts shortcut named "Lock Screen"
+     3. iOS Settings → Passcode deep-link
+   All three require the matching app/shortcut to be installed.
+================================================================ */
+function handleUnlock(e) {
+  e.preventDefault();
+
+  // Visual tap feedback
+  const btn = $('btn-unlock');
+  btn.style.background = 'rgba(255,159,10,0.38)';
+  setTimeout(() => (btn.style.background = ''), 250);
+
+  /* ── Widgy native ────────────────────────────────────────
+  if (typeof WidgyBridge !== 'undefined' && WidgyBridge.lock) {
+    WidgyBridge.lock();
+    return;
+  }
+  ────────────────────────────────────────────────────────── */
+
+  // Try Shortcuts → Apple Shortcuts app must have a shortcut named "Lock Screen"
+  // Create it: Shortcuts app ▸ New Shortcut ▸ Add Action ▸ "Lock Screen"
+  const attempts = [
+    'shortcuts://run-shortcut?name=Lock%20Screen',
+    'widgy://lock',
+  ];
+  attempts.forEach((url, i) =>
+    setTimeout(() => { window.location.href = url; }, i * 350)
+  );
+}
+
+/* ================================================================
+   7 · CLAUDE SHORTCUT
+   Opens the Claude iOS app; falls back to claude.ai in browser.
+================================================================ */
+function handleClaude(e) {
+  e.preventDefault();
+
+  // Try the Claude URL scheme (requires Claude app installed)
+  window.location.href = 'claude://';
+
+  // Fallback: if scheme unhandled, open web after a short delay
+  setTimeout(() => {
+    try { window.open('https://claude.ai', '_blank'); }
+    catch(_) { window.location.href = 'https://claude.ai'; }
+  }, 900);
+}
+
+/* ================================================================
+   INIT
+================================================================ */
+function init() {
+  refreshDateTime();
+  refreshMoon();
+  fetchWeather();
+  loadSteps();
+  loadEvents();
+
+  // Refresh clock every 30 s
+  setInterval(refreshDateTime, 30000);
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>
