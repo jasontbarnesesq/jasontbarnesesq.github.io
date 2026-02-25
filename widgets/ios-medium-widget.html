@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=338, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Personal Dashboard · iOS26 Widget</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
 <!--
   ╔══════════════════════════════════════════════════════════╗
   ║  iOS 26 Medium Widget  ·  338 × 158 pt                  ║
@@ -29,28 +32,34 @@
 /* ── Reset ─────────────────────────────────────────────── */
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
-/* ── Design tokens ──────────────────────────────────────── */
+/* ── Design tokens (jasontbarnes.com palette) ───────────── */
 :root {
-  --accent:  #0A84FF;
-  --green:   #30D158;
-  --amber:   #FF9F0A;
-  --purple:  #BF5AF2;
-  --w1: rgba(255,255,255,0.96);
-  --w2: rgba(255,255,255,0.58);
-  --w3: rgba(255,255,255,0.28);
-  --w4: rgba(255,255,255,0.07);
-  --sep: rgba(255,255,255,0.09);
-  --r: 22px;
+  --ochre:      #C17D2E;
+  --ochre-dk:   #A86820;
+  --rust:       #A64E2A;
+  --sienna:     #7A3B1E;
+  --bark:       #3D2B1A;
+  --bark-deep:  #221206;
+  --bark-mid:   #5C4230;
+  --bark-lt:    #8B6B50;
+  --sage:       #6B7A5E;
+  --sage-lt:    #8A9B7C;
+  --parch:      #EDE3D0;
+  --parch-dk:   #D9C9AE;
+  --warm-white: #FAF7F2;
+  --sep:        rgba(193,125,46,0.22);
+  --r:          22px;
 }
 
-/* ── Page wrapper (preview centering on web) ────────────── */
+/* ── Page wrapper (web preview) ─────────────────────────── */
 body {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #1a1a2e;
-  font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
+  /* warm linen — echoes the site's parchment palette */
+  background: linear-gradient(135deg, #C4A882 0%, #B8976C 100%);
+  font-family: 'DM Sans', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -59,40 +68,41 @@ body {
   position: relative;
   width: 338px;
   height: 158px;
-  background: rgba(11,11,20,0.91);
-  backdrop-filter: blur(28px) saturate(165%);
-  -webkit-backdrop-filter: blur(28px) saturate(165%);
+  /* Rich bark base with diagonal warmth */
+  background:
+    linear-gradient(135deg, rgba(193,125,46,0.11) 0%, transparent 52%),
+    linear-gradient(315deg, rgba(122,59,30,0.14) 0%, transparent 52%),
+    #221206;
   border-radius: var(--r);
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid rgba(193,125,46,0.22);
   overflow: hidden;
   display: grid;
   grid-template-columns: 88px 1fr;
   grid-template-rows: 1fr 36px;
-  /* Subtle specular highlight along top edge */
   box-shadow:
-    0 1px 0 rgba(255,255,255,0.10) inset,
-    0 12px 48px rgba(0,0,0,0.55),
-    0 2px 8px  rgba(0,0,0,0.35);
+    0 1px 0 rgba(212,148,63,0.14) inset,   /* top specular edge  */
+    0 16px 44px rgba(34,18,6,0.70),
+    0 2px  8px  rgba(34,18,6,0.45);
 }
 
-/* Blue glow in upper-left */
+/* Warm ochre glow — upper left */
 .widget::before {
   content: '';
   position: absolute;
-  top: -60px; left: -40px;
-  width: 220px; height: 200px;
-  background: radial-gradient(circle, rgba(10,132,255,0.18) 0%, transparent 70%);
+  top: -55px; left: -35px;
+  width: 210px; height: 190px;
+  background: radial-gradient(circle, rgba(193,125,46,0.18) 0%, transparent 68%);
   pointer-events: none;
   z-index: 0;
 }
 
-/* Purple accent in lower-right */
+/* Sienna warmth — lower right */
 .widget::after {
   content: '';
   position: absolute;
-  bottom: -50px; right: -30px;
-  width: 180px; height: 160px;
-  background: radial-gradient(circle, rgba(191,90,242,0.10) 0%, transparent 68%);
+  bottom: -45px; right: -25px;
+  width: 170px; height: 150px;
+  background: radial-gradient(circle, rgba(166,78,42,0.16) 0%, transparent 66%);
   pointer-events: none;
   z-index: 0;
 }
@@ -110,36 +120,41 @@ body {
 }
 
 .date-weekday {
+  font-family: 'DM Sans', system-ui, sans-serif;
   font-size: 8px;
-  font-weight: 700;
-  letter-spacing: 0.15em;
+  font-weight: 600;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--ochre);
   line-height: 1;
 }
 
+/* Playfair Display gives the date number a legal-journal gravitas */
 .date-day {
-  font-size: 48px;
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-size: 50px;
   font-weight: 700;
-  letter-spacing: -3px;
+  letter-spacing: -1px;
   line-height: 0.95;
-  color: var(--w1);
+  color: var(--warm-white);
   margin-top: 2px;
 }
 
 .date-month {
+  font-family: 'DM Sans', system-ui, sans-serif;
   font-size: 9px;
-  font-weight: 500;
-  color: var(--w2);
+  font-weight: 400;
+  color: var(--parch-dk);
   text-transform: uppercase;
-  letter-spacing: 0.07em;
-  margin-top: 3px;
+  letter-spacing: 0.09em;
+  margin-top: 4px;
 }
 
 .date-clock {
+  font-family: 'DM Sans', system-ui, sans-serif;
   font-size: 12px;
   font-weight: 300;
-  color: var(--w2);
+  color: var(--bark-lt);
   letter-spacing: 0.02em;
   margin-top: 5px;
 }
@@ -175,15 +190,15 @@ body {
 
 .weather-temp {
   font-size: 14px;
-  font-weight: 600;
-  color: var(--w1);
-  letter-spacing: -0.3px;
+  font-weight: 500;
+  color: var(--warm-white);
+  letter-spacing: -0.2px;
   line-height: 1;
 }
 
 .weather-sub {
   font-size: 8.5px;
-  color: var(--w2);
+  color: var(--parch-dk);
   line-height: 1;
   margin-top: 1px;
   white-space: nowrap;
@@ -203,7 +218,7 @@ body {
 
 .moon-label {
   font-size: 8.5px;
-  color: var(--w2);
+  color: var(--parch-dk);
   white-space: nowrap;
 }
 
@@ -218,13 +233,13 @@ body {
 }
 
 .events-label {
+  font-family: 'DM Sans', system-ui, sans-serif;
   font-size: 7.5px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  font-weight: 600;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--ochre);
   margin-bottom: 3px;
-  opacity: 0.85;
 }
 
 .event-row {
@@ -240,24 +255,24 @@ body {
   height: 4px;
   border-radius: 50%;
   flex-shrink: 0;
-  background: var(--accent);
+  background: var(--ochre);
 }
-.event-pip.p1 { background: var(--accent); }
-.event-pip.p2 { background: var(--green);  }
-.event-pip.p3 { background: var(--amber);  }
+.event-pip.p1 { background: var(--ochre); }
+.event-pip.p2 { background: var(--rust);  }
+.event-pip.p3 { background: var(--sage);  }
 
 .event-time {
   font-size: 9px;
-  font-weight: 500;
-  color: var(--w3);
+  font-weight: 400;
+  color: var(--bark-lt);
   min-width: 40px;
   flex-shrink: 0;
 }
 
 .event-title {
   font-size: 10px;
-  font-weight: 500;
-  color: var(--w1);
+  font-weight: 400;
+  color: var(--warm-white);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -265,7 +280,7 @@ body {
 
 .events-empty {
   font-size: 10px;
-  color: var(--w3);
+  color: var(--bark-lt);
   font-style: italic;
   line-height: 17px;
 }
@@ -295,15 +310,15 @@ body {
 
 .steps-val {
   font-size: 13px;
-  font-weight: 700;
-  color: var(--green);
-  letter-spacing: -0.5px;
+  font-weight: 600;
+  color: var(--sage-lt);
+  letter-spacing: -0.3px;
   font-variant-numeric: tabular-nums;
 }
 
 .steps-unit {
   font-size: 8.5px;
-  color: var(--w2);
+  color: var(--bark-lt);
 }
 
 /* Shared button styles */
@@ -312,7 +327,7 @@ body {
   align-items: center;
   gap: 4px;
   padding: 5px 9px;
-  border-radius: 10px;
+  border-radius: 8px;
   border: 1px solid transparent;
   text-decoration: none;
   cursor: pointer;
@@ -330,26 +345,29 @@ body {
 .btn-icon { font-size: 11px; line-height: 1; }
 
 .btn-label {
+  font-family: 'DM Sans', system-ui, sans-serif;
   font-size: 10px;
-  font-weight: 600;
-  color: var(--w1);
+  font-weight: 500;
+  color: var(--warm-white);
   white-space: nowrap;
 }
 
+/* Rust-toned unlock button */
 .btn-unlock {
-  background: rgba(255,159,10,0.14);
-  border-color: rgba(255,159,10,0.26);
+  background: rgba(166,78,42,0.22);
+  border-color: rgba(166,78,42,0.40);
 }
 
+/* Ochre-toned Claude button */
 .btn-claude {
-  background: rgba(10,132,255,0.14);
-  border-color: rgba(10,132,255,0.26);
+  background: rgba(193,125,46,0.20);
+  border-color: rgba(193,125,46,0.38);
 }
 
-/* Subtle pulse on step count (living indicator) */
+/* Subtle pulse on step count */
 @keyframes step-pulse {
   0%,100% { opacity: 1; }
-  50%      { opacity: 0.70; }
+  50%      { opacity: 0.68; }
 }
 .steps-val.pulse { animation: step-pulse 2.8s ease-in-out infinite; }
 
@@ -633,7 +651,7 @@ function handleUnlock(e) {
 
   // Visual tap feedback
   const btn = $('btn-unlock');
-  btn.style.background = 'rgba(255,159,10,0.38)';
+  btn.style.background = 'rgba(166,78,42,0.52)';
   setTimeout(() => (btn.style.background = ''), 250);
 
   /* ── Widgy native ────────────────────────────────────────
