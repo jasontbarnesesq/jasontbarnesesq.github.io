@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>News Landing Page - Jason T. Barnes</title>
+    
+    <link rel="stylesheet" href="application-D2gCMyv0.css">
+    <link rel="stylesheet" href="BodyLoading-7PjfgDx_.css">
+    <link rel="stylesheet" href="ImageWidget-C1QHA1KV.css">
+
+    <style>
+        body {
+            background-image: url('apdgvgkfurv82i0hn1nk.webp');
+            background-size: cover;
+            background-attachment: fixed;
+            font-family: -apple-system, system-ui, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: auto;
+        }
+        .widget-card {
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+            backdrop-filter: blur(5px);
+        }
+        .widget-card h3 { margin-top: 0; color: #004a99; border-bottom: 2px solid #0093d5; padding-bottom: 8px; }
+        .link-item { display: flex; align-items: center; margin: 12px 0; text-decoration: none; color: #333; transition: transform 0.2s; }
+        .link-item:hover { transform: translateX(5px); color: #0093d5; }
+        .link-item img { width: 24px; height: 24px; margin-right: 12px; border-radius: 4px; }
+        
+        /* RSS Specific Styling */
+        .rss-item { padding: 10px 0; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+        .rss-item:last-child { border-bottom: none; }
+        .rss-date { font-size: 0.75rem; color: #777; display: block; margin-top: 4px; }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-grid">
+    <div class="widget-card">
+        <h3>Legal Tech & Real Estate</h3>
+        <a href="https://www.procopio.com/resource/fincen-real-estate-rule" class="link-item">
+            <img src="logo16.png" alt="Compliance">
+            <span>FinCEN RRE Rule (Eff. March 2026)</span>
+        </a>
+        <a href="https://vogelitlawblog.com/feed" class="link-item">
+            <img src="logo16.png" alt="Vogel">
+            <span>Vogel IT Law Insights</span>
+        </a>
+    </div>
+
+    <div class="widget-card">
+        <h3>Private Capital & DFW</h3>
+        <a href="https://www.connectcre.com/feed?story-market=dallas-fort-worth" class="link-item">
+            <img src="logo16.png" alt="DFW">
+            <span>Connect CRE: Dallas-Fort Worth</span>
+        </a>
+        <a href="https://www.privateequitywire.co.uk/" class="link-item">
+            <img src="logo16.png" alt="PE">
+            <span>Private Equity Wire</span>
+        </a>
+    </div>
+
+    <div class="widget-card">
+        <h3>Live Industry News</h3>
+        <div id="rss-feed-container">Fetching 2026 industry updates...</div>
+    </div>
+
+    <div class="widget-card">
+        <h3>Core Resources</h3>
+        <a href="https://hbr.org" class="link-item"><img src="hbr.webp" alt="HBR"><span>Harvard Business Review</span></a>
+        <a href="https://impactwealth.org" class="link-item"><img src="impactwealth.webp" alt="IW"><span>Impact Wealth</span></a>
+        <a href="https://google.com" class="link-item"><img src="google.webp" alt="G"><span>Google Search</span></a>
+    </div>
+</div>
+
+<script>
+    async function fetchIndustryNews() {
+        // Using Legal IT Professionals RSS feed as a primary source
+        const rssUrl = 'https://www.legalitprofessionals.com/?format=feed&type=rss';
+        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}`;
+
+        try {
+            const response = await fetch(proxyUrl);
+            const data = await response.json();
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(data.contents, "text/xml");
+            const items = xmlDoc.querySelectorAll("item");
+            
+            let html = "";
+            for (let i = 0; i < 5; i++) {
+                if (!items[i]) break;
+                const title = items[i].querySelector("title").textContent;
+                const link = items[i].querySelector("link").textContent;
+                const date = new Date(items[i].querySelector("pubDate").textContent).toLocaleDateString();
+
+                html += `<div class="rss-item">
+                            <a href="${link}" target="_blank"><strong>${title}</strong></a>
+                            <span class="rss-date">${date}</span>
+                         </div>`;
+            }
+            document.getElementById('rss-feed-container').innerHTML = html;
+        } catch (e) {
+            document.getElementById('rss-feed-container').innerHTML = "Unable to load live news.";
+        }
+    }
+    fetchIndustryNews();
+</script>
+
+</body>
+</html>
