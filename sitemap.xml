@@ -1,44 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://jasontbarnes.com/</loc>
-    <lastmod>2026-02-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
-  </url>
-
-  <url>
-    <loc>https://jasontbarnes.com/legal-services</loc>
-    <lastmod>2026-02-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://jasontbarnes.com/practice-tools</loc>
-    <lastmod>2026-02-23</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  
-  <url>
-    <loc>https://jasontbarnes.com/MyLegalTimekeeper</loc>
-    <lastmod>2026-02-23</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://jasontbarnes.com/insights</loc>
-    <lastmod>2026-02-23</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://jasontbarnes.com/privacy</loc>
-    <lastmod>2026-02-23</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
+  <url><loc>https://jasontbarnes.com/</loc><lastmod>2026-10-15</lastmod><priority>1.0</priority></url>
+  <url><loc>https://jasontbarnes.com/practice/</loc><lastmod>2026-10-15</lastmod><priority>0.8</priority></url>
+  <url><loc>https://jasontbarnes.com/practice/fund-formation/</loc><lastmod>2026-10-15</lastmod><priority>0.6</priority></url>
+  <url><loc>https://jasontbarnes.com/practice/capital-markets/</loc><lastmod>2026-10-15</lastmod><priority>0.6</priority></url>
+  <url><loc>https://jasontbarnes.com/practice/family-office/</loc><lastmod>2026-10-15</lastmod><priority>0.6</priority></url>
+  <url><loc>https://jasontbarnes.com/practice/eb5/</loc><lastmod>2026-10-15</lastmod><priority>0.6</priority></url>
+  <url><loc>https://jasontbarnes.com/practice/ma-structured-finance/</loc><lastmod>2026-10-15</lastmod><priority>0.6</priority></url>
+  <url><loc>https://jasontbarnes.com/practice/real-estate/</loc><lastmod>2026-10-15</lastmod><priority>0.6</priority></url>
+  <url><loc>https://jasontbarnes.com/approach/</loc><lastmod>2026-10-15</lastmod><priority>0.8</priority></url>
+  <url><loc>https://jasontbarnes.com/about/</loc><lastmod>2026-10-15</lastmod><priority>0.8</priority></url>
+  <url><loc>https://jasontbarnes.com/contact/</loc><lastmod>2026-10-15</lastmod><priority>0.8</priority></url>
+  <url><loc>https://jasontbarnes.com/insights/</loc><lastmod>2026-10-15</lastmod><priority>0.8</priority></url>
+  <url><loc>https://jasontbarnes.com/newsletter/</loc><lastmod>2026-10-15</lastmod><priority>0.8</priority></url>
+  <url><loc>https://jasontbarnes.com/lab/</loc><lastmod>2026-10-15</lastmod><priority>0.8</priority></url>
+  <url><loc>https://jasontbarnes.com/lab/timekeeper/</loc><lastmod>2026-10-15</lastmod><priority>0.6</priority></url>
+  <url><loc>https://jasontbarnes.com/lab/minder/</loc><lastmod>2026-10-15</lastmod><priority>0.6</priority></url>
+  <url><loc>https://jasontbarnes.com/legal/</loc><lastmod>2026-10-15</lastmod><priority>0.8</priority></url>
+  <url><loc>https://jasontbarnes.com/legal/privacy/</loc><lastmod>2026-10-15</lastmod><priority>0.6</priority></url>
 </urlset>

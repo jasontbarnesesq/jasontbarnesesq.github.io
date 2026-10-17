@@ -1,173 +1,39 @@
-# Deployment Instructions — jasontbarnes.com
+# jasontbarnesesq.github.io
 
-Complete step-by-step guide to deploy your homepage to GitHub Pages with custom domain.
+Serves **https://jasontbarnes.com** (GitHub Pages user site, `CNAME` = `jasontbarnes.com`).
 
----
+## Current state: interim home of the J.T. Barnes & Associates, PLLC website
 
-## ✅ DNS Configuration (GoDaddy) — Almost Complete!
+Until **jtbarnespllc.com** is connected, the new firm website runs here on jasontbarnes.com. The site is generated from the `jtbarnespllc-site` package (`build/build.py`); do not edit the generated HTML by hand.
 
-You already have the correct setup. **One change needed:**
+The previous jasontbarnes.com site (Munsch Hardt era) is preserved on the branch **`archive/jasontbarnes-com-2026-10`**.
 
-### Delete This Record
-- **Type A, Name @, Data: WebsiteBuilder Site** ← Delete this row (conflicts with GitHub)
+## Folders that must stay in this repository
 
-### Keep These Records (Already Correct)
-- A @ → 185.199.108.153 ✓
-- A @ → 185.199.109.153 ✓
-- A @ → 185.199.110.153 ✓
-- A @ → 185.199.111.153 ✓
-- CNAME www → jasontbarnesesq.github.io ✓
+| Path | What it is | Why it stays |
+|---|---|---|
+| `MyLegalTimekeeper/` | Copy of the Legal Timekeeper app and its setup notes | Existing links |
+| `startpage/` | News landing page used as a browser start page | Bookmarks and new-tab extension |
+| `MyLegalWidget_A1`, `widgets` | iOS widget source | Widget references |
+| `CNAME` | `jasontbarnes.com` | Keeps every project site (including `jasontbarnes.com/mylegaltimekeeper/`, whose Google sign-in is registered to it) on this domain |
 
-After deleting the WebsiteBuilder record, click **Save** in GoDaddy DNS settings.
+The live Legal Timekeeper is the separate **mylegaltimekeeper** repository, served at `https://jasontbarnes.com/mylegaltimekeeper/` because this repository holds the `jasontbarnes.com` domain. Changing `CNAME` here moves that app too.
 
-DNS propagation: 15 minutes to 48 hours (usually ~1 hour). Check progress at dnschecker.org
+## Website files (generated)
 
----
+`index.html`, `404.html`, `about/`, `approach/`, `contact/`, `practice/`, `insights/`, `newsletter/`, `lab/`, `legal/`, `assets/`, `favicon.ico`, `robots.txt`, `sitemap.xml`, plus redirect pages at the old addresses `legal-services/`, `practice-tools/`, `privacy/`, and the three old `insights/` article paths.
 
-## Step 1 — Create GitHub Repository
-
-1. Go to **github.com** → Sign in with `jasontbarnesesq`
-2. Click **New repository** (green button, top right)
-3. Repository name: `jasontbarnesesq.github.io` (must match exactly)
-4. Visibility: **Public**
-5. ☑ Add a README file (you can replace it)
-6. Click **Create repository**
-
----
-
-## Step 2 — Upload Files to GitHub
-
-**Option A — Web Interface (Easier)**
-
-1. In your new repo, click **Add file** → **Upload files**
-2. Drag and drop these three files from your computer:
-   - `index.html` (the homepage)
-   - `CNAME` (domain configuration)
-   - `README.md` (documentation)
-3. Scroll down, commit message: "Initial homepage deploy"
-4. Click **Commit changes**
-
-**Option B — Git Command Line (If Comfortable)**
+To rebuild after editing `build/build.py` in the site package:
 
 ```bash
-# In your terminal, navigate to where you saved the files
-cd ~/path/to/files
-
-# Initialize and push
-git init
-git add index.html CNAME README.md
-git commit -m "Initial homepage deploy"
-git branch -M main
-git remote add origin https://github.com/jasontbarnesesq/jasontbarnesesq.github.io.git
-git push -u origin main
+python3 build/build.py --domain jasontbarnes.com \
+  --out /path/to/jasontbarnesesq.github.io --legacy-stubs --no-nojekyll
+cp -r docs/assets docs/favicon.ico /path/to/jasontbarnesesq.github.io/
 ```
 
----
+`--no-nojekyll` keeps GitHub's normal processing for the other folders in this repository.
 
-## Step 3 — Enable GitHub Pages
+## Moving to jtbarnespllc.com (later)
 
-1. In your repo, go to **Settings** (top nav)
-2. Scroll down left sidebar → **Pages**
-3. Under "Build and deployment":
-   - Source: **Deploy from a branch**
-   - Branch: **main**
-   - Folder: **/ (root)**
-4. Click **Save**
-
-GitHub will show: "Your site is live at https://jasontbarnesesq.github.io"
-Wait ~2 minutes for initial build.
-
----
-
-## Step 4 — Verify Custom Domain
-
-In the same Settings → Pages section:
-
-1. Under "Custom domain", you should see: `jasontbarnes.com` (already configured via CNAME file)
-2. Once DNS propagates (check dnschecker.org), a green checkmark will appear
-3. Enable **☑ Enforce HTTPS** (appears after DNS verification)
-
----
-
-## Step 5 — Test Both URLs
-
-Open two browser tabs:
-
-```
-https://jasontbarnes.com                    ← Your homepage
-https://jasontbarnes.com/MyLegalTimekeeper  ← App (unchanged)
-```
-
-Both should work. The Timekeeper app inherits the custom domain automatically — no changes needed to that repo.
-
----
-
-## Troubleshooting
-
-**"DNS check failed" in GitHub Pages**
-- Wait longer (DNS can take up to 48 hours)
-- Verify you deleted the WebsiteBuilder A record in GoDaddy
-- Check dnschecker.org to see propagation status
-
-**Homepage loads but Timekeeper gives 404**
-- Make sure MyLegalTimekeeper repo has GitHub Pages enabled
-- Settings → Pages → Deploy from branch → main
-
-**"jasontbarnes.com" shows error page**
-- DNS not propagated yet — try jasontbarnesesq.github.io first
-- That should work immediately while DNS resolves
-
----
-
-## What Happens Next
-
-### Immediate (After Step 3)
-```
-jasontbarnesesq.github.io → ✓ Homepage live
-jasontbarnesesq.github.io/MyLegalTimekeeper → ✓ App live
-```
-
-### After DNS Propagates (1–48 hours)
-```
-jasontbarnes.com → ✓ Homepage
-jasontbarnes.com/MyLegalTimekeeper → ✓ App
-www.jasontbarnes.com → ✓ Redirects to non-www
-```
-
-The github.io URLs continue to work even after custom domain is active.
-
----
-
-## File Structure After Deploy
-
-```
-jasontbarnesesq.github.io/
-├── index.html              ← Homepage
-├── CNAME                   ← Domain config (jasontbarnes.com)
-└── README.md               ← This documentation
-
-Future pages (add as needed):
-├── legal-services/
-│   └── index.html
-├── about/
-│   └── index.html
-├── insights/
-│   └── index.html
-└── privacy-policy/
-    └── index.html
-```
-
-Each folder with an `index.html` becomes a clean URL:
-- `/legal-services/index.html` → `jasontbarnes.com/legal-services`
-- `/about/index.html` → `jasontbarnes.com/about`
-
----
-
-## Contact
-
-Questions? Email: jtbarnes@munsch.com
-Phone: 214.880.1024
-
----
-
-**You're ready to deploy. Start at Step 1.**
+1. Create the `jtbarnespllc-site` repository, publish it from `docs/` with domain `jtbarnespllc.com`, and set the jtbarnespllc.com DNS records (see the launch workbook).
+2. Once https://jtbarnespllc.com is live, replace the generated website files here with the redirect pages from the `jasontbarnes-redirect` package. Keep every folder in the table above and keep `CNAME` as `jasontbarnes.com`.
