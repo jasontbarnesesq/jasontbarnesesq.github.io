@@ -1,3 +1,5 @@
+> **Moved (November 6, 2026).** My Legal Timekeeper has been replaced by Legal Timekeeper 2.0 at https://jtbarnespllc.com/lab/timekeeper/app/ (source: `jtbarnespllc-site`, `docs/lab/timekeeper/app/`). This address now shows a forwarding page that can hand entries saved in the original app over to the new one. The notes below describe the retired version.
+
 
 🎤 My Legal Timekeeper
 
